@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             Title="{Binding PageTitle}"
+             x:Class="BankApp.Views.CardDetailsPage">
+    <ContentPage.Content>
+        <ScrollView Orientation="Vertical">
+            <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+            
+                <Label Text="{Binding NameCaption}" HorizontalTextAlignment="Start"></Label>
+                <Entry Text="{Binding SelectedCard.CardName, Mode=TwoWay}"></Entry>
+
+                <Label Text="{Binding NumberCaption}" HorizontalTextAlignment="Start"></Label>
+                <Entry Text="{Binding SelectedCard.CardNumber, Mode=TwoWay}"></Entry>
+
+                <Label Text="{Binding BalanceCaption}" HorizontalTextAlignment="Start" IsEnabled="{Binding AddNewCardMode}"></Label>
+                <Entry Text="{Binding SelectedCard.Balance, Mode=TwoWay}" IsEnabled="{Binding AddNewCardMode}"></Entry>
+           
+
+                <Label Text="{Binding CVVCaption}" HorizontalTextAlignment="Start"></Label>
+                <Entry Text="{Binding SelectedCard.CVV, Mode=TwoWay}"></Entry>
+
+                <Label Text="{Binding MonthCaption}" HorizontalTextAlignment="Start"></Label>
+                <Entry Text="{Binding SelectedCard.Month, Mode=TwoWay}"></Entry>
+
+                <Label Text="{Binding YearCaption}" HorizontalTextAlignment="Start"></Label>
+                <Entry Text="{Binding SelectedCard.Year, Mode=TwoWay}"></Entry>
+            
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <Switch IsToggled="{Binding SelectedCard.IsCredit, Mode=TwoWay}" ></Switch>
+                    <Label Text="{Binding CreditCaption}" HorizontalTextAlignment="Start"></Label>
+                </StackLayout>
+           
+
+                <Button Text="{Binding SaveCaption}" Command="{Binding SaveCommand}"></Button>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

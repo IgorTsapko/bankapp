@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:validators="clr-namespace:BankApp.Validators;assembly=BankApp"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             NavigationPage.HasBackButton="False"
+             Title="{Binding PageTitle}"
+             x:Class="BankApp.Views.LoginOrRegisterPage">
+  <ContentPage.Content>
+      <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+        <Label Text="{Binding EMailCaption}" HorizontalTextAlignment="Start"></Label>
+            <Entry Keyboard="{Binding EMailKeyboard}" Text="{Binding EMailValue, Mode=TwoWay}">
+                <Entry.Behaviors>
+                    <validators:EMailValidator/>
+                </Entry.Behaviors>
+            </Entry>
+
+        <Label Text="{Binding PasswordCaption}" HorizontalTextAlignment="Start"></Label>
+            <Entry x:Name="Password" Text="{Binding PasswordValue, Mode=TwoWay}" HorizontalTextAlignment="Start" IsPassword="True">
+            <Entry.Behaviors>
+                <validators:PasswordValidator/>
+            </Entry.Behaviors>
+        </Entry>
+
+        <Label Text="{Binding PasswordConfirmCaption}" IsVisible="{Binding RegistrationMode}" HorizontalTextAlignment="Start"></Label>
+            <Entry x:Name="ConfirmPassword" Text="{Binding PasswordConfirmValue, Mode=TwoWay}" IsVisible="{Binding RegistrationMode}"  HorizontalTextAlignment="Start" IsPassword="True">
+                <Entry.Behaviors>
+                    <validators:PasswordValidator CompareTo="{Binding Source={x:Reference Password}}" />
+                </Entry.Behaviors>
+            </Entry>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+            </Grid>
+            <Button Margin="5" Text="{Binding LoginButtonCaption}" Command="{Binding LoginOrRegisterCommand}"></Button>
+            <Button Margin="5" Text="{Binding RegisterButtonCaption}" Command="{Binding OpenRegisterSectionCommand}"></Button>
+
+
+        </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

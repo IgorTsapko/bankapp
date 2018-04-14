@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             NavigationPage.HasBackButton="False"
+             Title="{Binding PageTitle}"
+             x:Name="MyCardInfoPage"
+             x:Class="BankApp.Views.CardsInfoPage">
+  <ContentPage.Content>
+      <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+            <ListView ItemsSource="{Binding UserCards}" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="150"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding CardName}" Grid.Row="0" Grid.Column="0"></Label>
+                                <Label Text="{Binding CardNumber}" Grid.Row="1" Grid.Column="0"></Label>
+                                <Label Text="{Binding Balance}" Grid.Row="2" Grid.Column="0"></Label>
+
+                                <Button Grid.Row="0" Grid.Column="1"
+                                    Text="{Binding Source={x:Reference MyCardInfoPage}, Path=BindingContext.OpenCartButtonCaption}"
+                                    Command="{Binding Source={x:Reference MyCardInfoPage}, Path=BindingContext.OpenCardCommand}"
+                                    CommandParameter="{Binding}"
+                                    ></Button>
+
+                                <Button Grid.Row="1" Grid.Column="1"
+                                        Text="{Binding Source={x:Reference MyCardInfoPage}, Path=BindingContext.ModifyCartButtonCaption}"
+                                        Command="{Binding Source={x:Reference MyCardInfoPage}, Path=BindingContext.ModifyCardCommand}"
+                                        CommandParameter="{Binding}"
+                                ></Button>
+
+                                <Button Grid.Row="2" Grid.Column="1"
+                                        Text="{Binding Source={x:Reference MyCardInfoPage}, Path=BindingContext.DeleteCartButtonCaption}"
+                                        Command="{Binding Source={x:Reference MyCardInfoPage}, Path=BindingContext.DeleteCardCommand}"
+                                        CommandParameter="{Binding}"
+                                ></Button>
+
+
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Text="{Binding AddCartButtonCaption}"
+                    Command="{Binding AddCardCommand}" ></Button>
+      </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

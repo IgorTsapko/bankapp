@@ -25,6 +25,8 @@ namespace BankApp.Droid
     {
         public void RegisterTypes(IContainerRegistry container)
         {
+            container.RegisterInstance<Database.ISqLite>(new SQLiteAndr());
+
             // Register any platform specific implementations
         }
     }

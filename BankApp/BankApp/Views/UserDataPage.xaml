@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             NavigationPage.HasBackButton="False"
+             x:Class="BankApp.Views.UserDataPage">
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+            <Label Text="{Binding NameCaption}" HorizontalTextAlignment="Start"></Label>
+            <Entry Text="{Binding SelectedUser.Name, Mode=TwoWay}"></Entry>
+
+            <Label Text="{Binding SurnameCaption}" HorizontalTextAlignment="Start"></Label>
+            <Entry Text="{Binding SelectedUser.Surname, Mode=TwoWay}"></Entry>
+
+            <Label Text="{Binding PhoneCaption}" HorizontalTextAlignment="Start"></Label>
+            <Entry Text="{Binding SelectedUser.PhoneNum, Mode=TwoWay}"></Entry>
+
+            <Button Text="{Binding SaveCaption}" Command="{Binding SaveCommand}"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

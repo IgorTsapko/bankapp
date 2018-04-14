@@ -24,13 +24,17 @@ namespace BankApp
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            await NavigationService.NavigateAsync("NavigationPage/LoginOrRegisterPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<LoginOrRegisterPage>();
+            containerRegistry.RegisterForNavigation<UserDataPage>();
+            containerRegistry.RegisterForNavigation<CardsInfoPage>();
+            containerRegistry.RegisterForNavigation<PaysInfoPage>();
+            containerRegistry.RegisterForNavigation<CardDetailsPage>();
         }
     }
 }
