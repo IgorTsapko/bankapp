@@ -23,6 +23,9 @@ namespace BankApp.Other
                     eMail = CurrentUser.EMail;
 
                 var user = await BankApi.GetCurrentUser();
+                user.Cards = new List<CardInfo>(await BankApi.GetCards());
+                user.Pays = new List<PayInfo>(await BankApi.GetPays());
+
                 CurrentUser = new BankUserDb(user, eMail);
                 var allCards = Repository.GetItems<CardInfoDb>().Where(c => c.UserId == user.Id).ToList();
                 foreach (var cardInfo in allCards)
@@ -48,7 +51,7 @@ namespace BankApp.Other
             }
         }
 
-        internal static void UpdateCurrentUserFromCache()
+        internal static void ReadLastLogin()
         {
             try
             {

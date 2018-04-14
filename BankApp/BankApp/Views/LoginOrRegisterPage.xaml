@@ -38,6 +38,7 @@
             </Grid>
             <Button Margin="5" Text="{Binding LoginButtonCaption}" Command="{Binding LoginOrRegisterCommand}"></Button>
             <Button Margin="5" Text="{Binding RegisterButtonCaption}" Command="{Binding OpenRegisterSectionCommand}"></Button>
+            <Button Margin="5" Text="{Binding BranchesButtonCaption}" Command="{Binding OpenBankBranchesCommand}"></Button>
 
 
         </StackLayout>

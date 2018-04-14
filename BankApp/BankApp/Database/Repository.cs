@@ -19,7 +19,7 @@ namespace BankApp.Database
 
             try
             {
-
+                _connection.CreateTable<BankBranchDb>();
                 _connection.CreateTable<BankUserDb>();
                 _connection.CreateTable<CardInfoDb>();
                 _connection.CreateTable<PayInfoDb>();
@@ -29,8 +29,8 @@ namespace BankApp.Database
                 //process
             }
 
-            //Type ourtype = typeof(SQLiteParent); 
-            //IEnumerable<Type> list = Assembly.GetAssembly(ourtype).GetTypes().Where(type => type.IsSubclassOf(ourtype));
+            //Type parentType = typeof(SQLiteParent); 
+            //IEnumerable<Type> list = Assembly.GetAssembly(parentType).GetTypes().Where(type => type.IsSubclassOf(parentType));
 
             //foreach (var myType in list)
             //{

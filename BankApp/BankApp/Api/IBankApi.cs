@@ -11,6 +11,8 @@ namespace BankApp.Api
         [Get("/api/Branches")]
         Task<IList<BankBranch>> GetBranches();
 
+        [Get("/api/Pays")]
+        Task<IList<PayInfo>> GetPays([Header("Authorization")] string token);
 
         [Get("/api/Card")]
         Task<IList<CardInfo>> GetCards([Header("Authorization")] string token);

@@ -16,7 +16,6 @@ namespace BankApi.Controllers
     [Authorize]
     public class UserDataController : ApiController
     {
-        
         public BankUser Get()
         {
             try
@@ -24,13 +23,13 @@ namespace BankApi.Controllers
                 using (BankContext db = new BankContext())
                 {
                     string userId = RequestContext.Principal.Identity.GetUserId();
-                    var findedUser = db.BankUsers.Include(c => c.Cards).Include(c => c.Pays).FirstOrDefault(u => u.UserIdentityId == userId);
+                    var findedUser = db.BankUsers.FirstOrDefault(u => u.UserIdentityId == userId);
                     return findedUser;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                //
             }
 
             return null;
@@ -59,7 +58,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                //
             }
             
 
@@ -71,39 +70,53 @@ namespace BankApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            using (BankContext db = new BankContext())
+            try
             {
-                string userId = RequestContext.Principal.Identity.GetUserId();
-                var userForModify = db.BankUsers.FirstOrDefault(u => u.Id == id && u.UserIdentityId == userId);
-                if (userForModify != null)
+                using (BankContext db = new BankContext())
                 {
-                    foreach (PropertyInfo propertyInfo in userForModify.GetType().GetProperties()
-                        .Where(p => p.Name != nameof(BankUser.Id)))
+                    string userId = RequestContext.Principal.Identity.GetUserId();
+                    var userForModify = db.BankUsers.FirstOrDefault(u => u.Id == id && u.UserIdentityId == userId);
+                    if (userForModify != null)
                     {
-                        if (propertyInfo.GetValue(value, null) == null)
-                            propertyInfo.SetValue(value, propertyInfo.GetValue(userForModify, null), null);
+                        foreach (PropertyInfo propertyInfo in userForModify.GetType().GetProperties()
+                            .Where(p => p.Name != nameof(BankUser.Id)))
+                        {
+                            if (propertyInfo.GetValue(value, null) == null)
+                                propertyInfo.SetValue(value, propertyInfo.GetValue(userForModify, null), null);
+                        }
+                        db.Entry(userForModify).CurrentValues.SetValues(value);
+                        db.Entry(userForModify).State = EntityState.Modified;
+                        db.SaveChanges();
+                        var createdUser = db.BankUsers.FirstOrDefault(u => u.UserIdentityId == userId);
+                        return Ok(createdUser);
                     }
-                    db.Entry(userForModify).CurrentValues.SetValues(value);
-                    db.Entry(userForModify).State = EntityState.Modified;
-                    db.SaveChanges();
-                    var createdUser = db.BankUsers.FirstOrDefault(u => u.UserIdentityId == userId);
-                    return Ok(createdUser);
                 }
             }
-
+            catch (Exception ex)
+            {
+                //
+            }
             return BadRequest();
         }
 
         [Authorize(Roles = "Administrators")]
         public IHttpActionResult Delete(int id)
         {
-            using (BankContext db = new BankContext())
+            try
             {
-                var userForDelete = db.BankUsers.FirstOrDefault(u => u.Id == id);
-                db.BankUsers.Remove(userForDelete);
+                using (BankContext db = new BankContext())
+                {
+                    var userForDelete = db.BankUsers.FirstOrDefault(u => u.Id == id);
+                    db.BankUsers.Remove(userForDelete);
+                    db.SaveChanges();
+                }
+                return Ok();
             }
-            return Ok();
+            catch (Exception ex)
+            {
+                //
+            }
+            return InternalServerError();
         }
     }
 }

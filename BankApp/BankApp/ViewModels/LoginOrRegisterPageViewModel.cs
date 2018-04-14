@@ -40,7 +40,7 @@ namespace BankApp.ViewModels
 
 	    public bool LoginMode => !RegistrationMode;
 
-
+	    public string BranchesButtonCaption => "Список отделений";
         public string PageTitle => RegistrationMode ? "Регистрация" : "Вход";
         public string LoginButtonCaption => RegistrationMode ? "Регистрация" : "Вход";
 	    public string RegisterButtonCaption => RegistrationMode ? "Отмена" : "Зарегистрироваться";
@@ -72,9 +72,10 @@ namespace BankApp.ViewModels
 	    }
 
 
-
         public DelegateCommand LoginOrRegisterCommand { get; }
 	    public DelegateCommand OpenRegisterSectionCommand { get; }
+	    public DelegateCommand OpenBankBranchesCommand { get; }
+        
 
         public LoginOrRegisterPageViewModel(IEventAggregator eventAggregator, INavigationService navigationService, ISqLite sqLiteImpl)
         {
@@ -82,12 +83,13 @@ namespace BankApp.ViewModels
             _navigationService = navigationService;
             Repository.DatabasePath = sqLiteImpl.GetPathToDatabase("bankApp.db");
             Repository.Init();
-            StateModel.UpdateCurrentUserFromCache();
+            StateModel.ReadLastLogin();
             if (StateModel.CurrentUser != null)
                 EMailValue = StateModel.CurrentUser.EMail;
 
             LoginOrRegisterCommand = new DelegateCommand(LoginOrRegister);
             OpenRegisterSectionCommand = new DelegateCommand(OpenRegister);
+            OpenBankBranchesCommand = new DelegateCommand(OpenBranches);
         }
 
 	    async void LoginOrRegister()
@@ -117,6 +119,11 @@ namespace BankApp.ViewModels
 	    void OpenRegister()
 	    {
             RegistrationMode = !RegistrationMode;
+        }
+
+	    async void OpenBranches()
+	    {
+	        await _navigationService.NavigateAsync(nameof(BankBranchesPage));
         }
 	}
 }

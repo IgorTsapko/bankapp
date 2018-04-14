@@ -23,6 +23,20 @@ namespace BankApp.Api
             }
         }
 
+        internal static async Task<IList<BankBranch>> GetBranches()
+        {
+            IList<BankBranch> result = null;
+            try
+            {
+                result = await BankApi.ApiClient.GetBranches();
+            }
+            catch (Exception e)
+            {
+                //process
+            }
+            return result;
+        }
+
         static readonly IBankApi ApiClient = RestService.For<IBankApi>(AuthClass.ServerUrl);
 
         internal static async Task<BankUser> GetCurrentUser()
@@ -66,6 +80,36 @@ namespace BankApp.Api
             }
             return result;
         }
+
+        internal static async Task<IList<PayInfo>> GetPays()
+        {
+            IList<PayInfo> result = null;
+            try
+            {
+                result = await BankApi.ApiClient.GetPays(AuthClass.Token);
+            }
+            catch (Exception e)
+            {
+                //process
+            }
+            return result;
+        }
+
+        internal static async Task<IList<CardInfo>> GetCards()
+        {
+            IList<CardInfo> result = null;
+            try
+            {
+                result = await BankApi.ApiClient.GetCards(AuthClass.Token);
+            }
+            catch (Exception e)
+            {
+                //process
+            }
+            return result;
+        }
+
+
 
         internal static async Task<CardInfo> AddCard(CardInfo cardInfo)
         {

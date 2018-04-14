@@ -3,6 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
+             Title="{Binding PageTitle}"
              x:Class="BankApp.Views.PaysInfoPage">
-  
+  <ContentPage.Content>
+        <ListView ItemsSource="{Binding Pays}" HasUnevenRows="True">
+          <ListView.ItemTemplate>
+              <DataTemplate>
+                  <ViewCell>
+                      <Grid>
+                          <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="150"></ColumnDefinition>
+                              <ColumnDefinition Width="*"></ColumnDefinition>
+                          </Grid.ColumnDefinitions>
+                      
+                        <Label Grid.Column="0" Text="{Binding Sum}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+                        <Label Grid.Column="1" Text="{Binding Description}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+                       </Grid>
+                    </ViewCell>
+              </DataTemplate>
+          </ListView.ItemTemplate>
+      </ListView>
+  </ContentPage.Content>
 </ContentPage>

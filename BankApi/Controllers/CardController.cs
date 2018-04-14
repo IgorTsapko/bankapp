@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
-using System.Windows.Forms;
 using BankApi.DbCont;
 using BankApi.Models;
 using Microsoft.AspNet.Identity;
@@ -55,41 +51,57 @@ namespace BankApi.Controllers
         public CardInfo Get(int id)
         {
             CardInfo retCard = null;
-            using (BankContext db = new BankContext())
+            try
             {
-                retCard = db.BankUsers
-                    .FirstOrDefault(u => u.UserIdentityId == RequestContext.Principal.Identity.GetUserId())?.Cards
-                    .FirstOrDefault(c => c.Id == id && c.IsActive);
+                using (BankContext db = new BankContext())
+                {
+                    retCard = db.BankUsers
+                        .FirstOrDefault(u => u.UserIdentityId == RequestContext.Principal.Identity.GetUserId())?.Cards
+                        .FirstOrDefault(c => c.Id == id && c.IsActive);
+                }
+            }
+            catch (Exception ex)
+            {
+                //
             }
             return retCard;
         }
 
         public IHttpActionResult Post([FromBody]CardInfo value)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var controllerValidate = ValidateCard(value);
-            if (controllerValidate.Count > 0)
-            {
-                foreach (var errorText in controllerValidate)
-                    ModelState.AddModelError("", errorText);
-                return BadRequest(ModelState);
-            }
-
             CardInfo retCard = null;
-            
-            using (BankContext db = new BankContext())
+            try
             {
-                var currentUser = db.BankUsers.FirstOrDefault(u =>
-                    u.UserIdentityId == UserId);
-                if (currentUser != null)
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var controllerValidate = ValidateCard(value);
+                if (controllerValidate.Count > 0)
                 {
-                    currentUser.Cards.Add(value);
-                    db.SaveChanges();
-                    retCard = currentUser.Cards.FirstOrDefault(c => c.Id == value.Id);
+                    foreach (var errorText in controllerValidate)
+                        ModelState.AddModelError("", errorText);
+                    return BadRequest(ModelState);
+                }
+
+
+
+                using (BankContext db = new BankContext())
+                {
+                    var currentUser = db.BankUsers.FirstOrDefault(u =>
+                        u.UserIdentityId == UserId);
+                    if (currentUser != null)
+                    {
+                        currentUser.Cards.Add(value);
+                        db.SaveChanges();
+                        retCard = currentUser.Cards.FirstOrDefault(c => c.Id == value.Id);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                //
+            }
+            
 
             if (retCard != null)
                 return Ok(retCard);
@@ -157,8 +169,8 @@ namespace BankApi.Controllers
                         u.UserIdentityId == UserId && u.Cards.Any(c => c.Id == id));
                     if (currentUser != null)
                     {
-                        currentUser.Cards.Remove(currentUser.Cards.FirstOrDefault(c => c.Id == id));
-                        //currentUser.Cards.FirstOrDefault(c => c.Id == id).IsActive = false;
+                        //currentUser.Cards.Remove(currentUser.Cards.FirstOrDefault(c => c.Id == id));
+                        currentUser.Cards.FirstOrDefault(c => c.Id == id).IsActive = false;
                         db.SaveChanges();
                     }
                 }

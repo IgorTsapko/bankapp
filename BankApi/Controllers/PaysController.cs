@@ -30,34 +30,45 @@ namespace BankApi.Controllers
 
         public IList<PayInfo> Get()
         {
-            IList<PayInfo> userPays;
-            using (BankContext db = new BankContext())
+            IList<PayInfo> userPays = new List<PayInfo>();
+            try
             {
-                userPays = db.BankUsers.FirstOrDefault(u =>
-                    u.UserIdentityId == UserId)?.Pays;
+                using (BankContext db = new BankContext())
+                {
+                    userPays = db.BankUsers.FirstOrDefault(u =>
+                        u.UserIdentityId == UserId)?.Pays;
+                }
             }
-
+            catch (Exception e)
+            {
+                //
+            }
             return userPays;
         }
 
         [HttpGet]
         public IList<PayInfo> GetByCard(int cardId)
         {
-            IList<PayInfo> userPays;
-            using (BankContext db = new BankContext())
+            IList<PayInfo> userPays = new List<PayInfo>();
+            try
             {
-                var userPaysEnum = db.BankUsers.FirstOrDefault(u =>
-                    u.UserIdentityId == UserId)?.Pays.Where(p => p.CardId == cardId);
-                if (!userPaysEnum.Any())
+                using (BankContext db = new BankContext())
                 {
-                    CreateFirstData(db, cardId);
-                    userPaysEnum = db.BankUsers.FirstOrDefault(u =>
+                    var userPaysEnum = db.BankUsers.FirstOrDefault(u =>
                         u.UserIdentityId == UserId)?.Pays.Where(p => p.CardId == cardId);
+                    if (!userPaysEnum.Any())
+                    {
+                        CreateFirstData(db, cardId);
+                        userPaysEnum = db.BankUsers.FirstOrDefault(u =>
+                            u.UserIdentityId == UserId)?.Pays.Where(p => p.CardId == cardId);
+                    }
+
+                    return userPaysEnum.ToList();
                 }
-
-                return userPaysEnum.ToList();
-
-
+            }
+            catch (Exception e)
+            {
+                //
             }
 
             return userPays;
@@ -65,12 +76,21 @@ namespace BankApi.Controllers
 
         public PayInfo Get(int id)
         {
-            PayInfo userPay;
-            using (BankContext db = new BankContext())
+            PayInfo userPay = null;
+
+            try
             {
-                userPay = db.BankUsers.FirstOrDefault(u =>
-                    u.UserIdentityId == UserId)?.Pays.FirstOrDefault(p => p.Id == id);
+                using (BankContext db = new BankContext())
+                {
+                    userPay = db.BankUsers.FirstOrDefault(u =>
+                        u.UserIdentityId == UserId)?.Pays.FirstOrDefault(p => p.Id == id);
+                }
             }
+            catch (Exception e)
+            {
+                //
+            }
+            
 
             return userPay;
         }

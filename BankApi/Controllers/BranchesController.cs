@@ -49,7 +49,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                //
             }
            
 

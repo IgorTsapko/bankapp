@@ -24,7 +24,13 @@ namespace BankApp.ViewModels
         public List<CardInfoDb> UserCards
         {
             get => _userCards;
-            set => SetProperty(ref _userCards, value);
+            set
+            {
+                SetProperty(ref _userCards, value); 
+                RaisePropertyChanged(nameof(CardInfoDb.CardName));
+                RaisePropertyChanged(nameof(CardInfoDb.CardNumber));
+                RaisePropertyChanged(nameof(CardInfoDb.Balance));
+            }
         }
 
 	    private readonly INavigationService _navigationService;

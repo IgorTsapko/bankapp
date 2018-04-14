@@ -35,6 +35,7 @@ namespace BankApp
             containerRegistry.RegisterForNavigation<CardsInfoPage>();
             containerRegistry.RegisterForNavigation<PaysInfoPage>();
             containerRegistry.RegisterForNavigation<CardDetailsPage>();
+            containerRegistry.RegisterForNavigation<BankBranchesPage>();
         }
     }
 }
