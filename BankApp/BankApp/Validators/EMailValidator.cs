@@ -10,16 +10,10 @@ namespace BankApp.Validators
     {
         private RegexUtilities _regexUtils = new RegexUtilities();
 
-        static readonly BindablePropertyKey IsValidPropertyKey = BindableProperty.CreateReadOnly("IsValid", typeof(bool), typeof(PasswordValidator), false);
+        static readonly BindablePropertyKey IsValidPropertyKey = BindableProperty.CreateReadOnly("IsValid", typeof(bool), typeof(EMailValidator), false);
         public static readonly BindableProperty IsValidProperty = IsValidPropertyKey.BindableProperty;
 
-        public static readonly BindableProperty CompareToProperty = BindableProperty.Create("CompareTo", typeof(Entry), typeof(PasswordValidator), null);
-
-        public Entry CompareToEntry
-        {
-            get => (Entry)GetValue(CompareToProperty);
-            set => SetValue(CompareToProperty, value);
-        }
+       
         public bool IsValid
         {
             get => (bool)GetValue(IsValidProperty);

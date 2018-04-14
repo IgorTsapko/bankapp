@@ -11,7 +11,7 @@ namespace TestApp
 {
     class Program
     {
-        private static string EMailValue = "user@gmail.com";
+        private static string EMailValue = "user2@gmail.com";
         private static string PasswordValue = "qwerty";
         static void Main(string[] args)
         {
@@ -48,6 +48,30 @@ namespace TestApp
 
             if (result)
             {
+                var userInfo = await BankApi.GetCurrentUser();
+                if (userInfo == null)
+                {
+                    userInfo = new BankUser
+                    {
+                        Name = "Igor23",
+                        Cards = new List<CardInfo>(),
+                        Pays = new List<PayInfo>(),
+                        Id = 0,
+                        PhoneNum = "0669591747",
+                        Surname = "Tsapko23"
+                    };
+                    try
+                    {
+                        var u = await BankApi.ApiClient.CreateUser(userInfo, AuthClass.Token);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+
+                var Cards = new List<CardInfo>(await BankApi.ApiClient.GetCards(AuthClass.Token));
+                var Pays = new List<PayInfo>(await BankApi.ApiClient.GetPays( AuthClass.Token));
+
                 var SelectedCard = new CardInfo
                 {
                     CardName = "test card 1",
@@ -58,8 +82,9 @@ namespace TestApp
                     Month = 11,
                     Year = 2019
                 };
-                await BankApi.ApiClient.ModifyCard(1, SelectedCard, AuthClass.Token);
-                await BankApi.ApiClient.DeleteCard(1, AuthClass.Token);
+                await BankApi.ApiClient.AddCard(SelectedCard, AuthClass.Token);
+                //await BankApi.ApiClient.ModifyCard(1, SelectedCard, AuthClass.Token);
+                //await BankApi.ApiClient.DeleteCard(1, AuthClass.Token);
 
                 //var br = await BankApi.ApiClient.GetBranches();
                 //var userInfo = await BankApi.GetCurrentUser();

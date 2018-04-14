@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Web.Http;
 using BankApi.DbCont;
 using BankApi.Models;
@@ -21,10 +22,11 @@ namespace BankApi.Controllers
                     u.UserIdentityId == UserId)?.Pays.Add(new PayInfo
                 {
                     CardId = cardId,
-                    Description = "Pay #"+i,
+                    Description = "Pay #" + i,
                     Sum = rand.Next(1000)
-                    });
+                });
             }
+
             db.SaveChanges();
         }
 
@@ -35,8 +37,21 @@ namespace BankApi.Controllers
             {
                 using (BankContext db = new BankContext())
                 {
-                    userPays = db.BankUsers.FirstOrDefault(u =>
-                        u.UserIdentityId == UserId)?.Pays;
+                    var userCardIDs = db.BankUsers.Include(u => u.Cards).FirstOrDefault(u =>
+                        u.UserIdentityId == UserId).Cards.Where(c => c.IsActive).Select(c => c.Id).ToArray();
+
+                    foreach (var userCardID in userCardIDs)
+                    {
+                        var cardPays = db.BankUsers.Include(u => u.Pays).FirstOrDefault(u =>
+                            u.UserIdentityId == UserId)?.Pays.Where(p => p.CardId == userCardID);
+                        if (!cardPays.Any())
+                            CreateFirstData(db, userCardID);
+                        
+                    }
+
+                    userPays = db.BankUsers.Include(u => u.Pays).FirstOrDefault(u =>
+                        u.UserIdentityId == UserId)?.Pays.Where(p => userCardIDs.Contains(p.CardId)).ToList();
+                    
                 }
             }
             catch (Exception e)
@@ -54,12 +69,12 @@ namespace BankApi.Controllers
             {
                 using (BankContext db = new BankContext())
                 {
-                    var userPaysEnum = db.BankUsers.FirstOrDefault(u =>
+                    var userPaysEnum = db.BankUsers.Include(u => u.Pays).FirstOrDefault(u =>
                         u.UserIdentityId == UserId)?.Pays.Where(p => p.CardId == cardId);
                     if (!userPaysEnum.Any())
                     {
                         CreateFirstData(db, cardId);
-                        userPaysEnum = db.BankUsers.FirstOrDefault(u =>
+                        userPaysEnum = db.BankUsers.Include(u => u.Pays).FirstOrDefault(u =>
                             u.UserIdentityId == UserId)?.Pays.Where(p => p.CardId == cardId);
                     }
 
@@ -82,7 +97,7 @@ namespace BankApi.Controllers
             {
                 using (BankContext db = new BankContext())
                 {
-                    userPay = db.BankUsers.FirstOrDefault(u =>
+                    userPay = db.BankUsers.Include(u => u.Pays).FirstOrDefault(u =>
                         u.UserIdentityId == UserId)?.Pays.FirstOrDefault(p => p.Id == id);
                 }
             }

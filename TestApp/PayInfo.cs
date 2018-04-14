@@ -10,7 +10,7 @@ namespace TestApp
     {
         public int Id { get; set; }
 
-        public CardInfo Card { get; set; }
+        public int CardId { get; set; }
 
         public decimal Sum { get; set; }
 

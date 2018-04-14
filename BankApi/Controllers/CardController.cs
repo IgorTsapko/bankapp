@@ -24,7 +24,9 @@ namespace BankApi.Controllers
                 using (BankContext db = new BankContext())
                 {
                     
-                    if (db.BankUsers.Any(u => u.UserIdentityId != UserId &&
+                    if (db.BankUsers
+                        .Include(u => u.Cards)
+                        .Any(u => u.UserIdentityId != UserId &&
                                               u.Cards.Any(c => c.CardNumber == cardInfo.CardNumber)))
                         results.Add("This card is not yours");
                 }
@@ -38,11 +40,21 @@ namespace BankApi.Controllers
 
         public IEnumerable<CardInfo> Get()
         {
-            IList<CardInfo> userCards;
-            using (BankContext db = new BankContext())
+            IList<CardInfo> userCards = new List<CardInfo>();
+            try
             {
-                userCards = db.BankUsers.FirstOrDefault(u =>
-                    u.UserIdentityId == UserId)?.Cards.Where(c => c.IsActive).ToList();
+                using (BankContext db = new BankContext())
+                {
+                    userCards = db.BankUsers
+                        .Include(u => u.Cards)
+                        .FirstOrDefault(u => u.UserIdentityId == UserId)
+                        ?.Cards.Where(c => c.IsActive)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                //
             }
 
             return userCards;
@@ -56,6 +68,7 @@ namespace BankApi.Controllers
                 using (BankContext db = new BankContext())
                 {
                     retCard = db.BankUsers
+                        .Include(u => u.Cards)
                         .FirstOrDefault(u => u.UserIdentityId == RequestContext.Principal.Identity.GetUserId())?.Cards
                         .FirstOrDefault(c => c.Id == id && c.IsActive);
                 }
@@ -87,7 +100,7 @@ namespace BankApi.Controllers
 
                 using (BankContext db = new BankContext())
                 {
-                    var currentUser = db.BankUsers.FirstOrDefault(u =>
+                    var currentUser = db.BankUsers.Include(u => u.Cards).FirstOrDefault(u =>
                         u.UserIdentityId == UserId);
                     if (currentUser != null)
                     {

@@ -52,6 +52,7 @@ namespace BankApi.Controllers
                         db.BankUsers.Add(value);
                         db.SaveChanges();
                         var createdUser = db.BankUsers.FirstOrDefault(u => u.UserIdentityId == userId);
+                        //send hellomail
                         return Ok(createdUser);
                     }
                 }
