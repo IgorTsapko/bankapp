@@ -23,7 +23,7 @@ namespace BankApp.ViewModels
         {
             try
             {
-                PageTitle = StateModel.SelectedCard.CardName;
+                PageTitle = "Платежи "  +StateModel.SelectedCard.CardName;
                 Pays = Repository.GetItems<PayInfoDb>().Where(p => p.CardId == StateModel.SelectedCard.Id).ToList();
             }
             catch (Exception ex)
