@@ -16,7 +16,7 @@
                 <Label Text="{Binding NumberCaption}" HorizontalTextAlignment="Start"></Label>
                 <Entry Text="{Binding SelectedCard.CardNumber, Mode=TwoWay}">
                     <Entry.Behaviors>
-                        <validators:NumberValidator MaxLength="16" MinLength="16" />
+                        <validators:NumberValidator MaxLen="16" MinLen="16" />
                     </Entry.Behaviors>
                 </Entry>
 
@@ -27,21 +27,21 @@
                 <Label Text="{Binding CVVCaption}" HorizontalTextAlignment="Start"></Label>
                 <Entry Text="{Binding SelectedCard.CVV, Mode=TwoWay}">
                     <Entry.Behaviors>
-                        <validators:NumberValidator MaxLength="3" MinLength="3" />
+                        <validators:NumberValidator MaxLen="3" MinLen="3" />
                     </Entry.Behaviors>
                 </Entry>
 
                 <Label Text="{Binding MonthCaption}" HorizontalTextAlignment="Start"></Label>
                 <Entry Text="{Binding SelectedCard.Month, Mode=TwoWay}">
                     <Entry.Behaviors>
-                        <validators:NumberValidator MaxValue="12" MinValue="1" />
+                        <validators:NumberValidator MaxVal="12" MinVal="1" />
                     </Entry.Behaviors>
                 </Entry>
 
                 <Label Text="{Binding YearCaption}" HorizontalTextAlignment="Start"></Label>
                 <Entry Text="{Binding SelectedCard.Year, Mode=TwoWay}">
                     <Entry.Behaviors>
-                        <validators:NumberValidator MaxValue="2050" MinValue="2010" />
+                        <validators:NumberValidator MaxVal="2050" MinVal="2010" />
                     </Entry.Behaviors>
                 </Entry>
             

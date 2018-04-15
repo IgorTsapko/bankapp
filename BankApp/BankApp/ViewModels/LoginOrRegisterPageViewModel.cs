@@ -79,42 +79,56 @@ namespace BankApp.ViewModels
 
         public LoginOrRegisterPageViewModel(IEventAggregator eventAggregator, INavigationService navigationService, ISqLite sqLiteImpl)
         {
-            _eventAggregator = eventAggregator;
-            _navigationService = navigationService;
-            Repository.DatabasePath = sqLiteImpl.GetPathToDatabase("bankApp.db");
-            Repository.Init();
-            StateModel.ReadLastLogin();
-            if (StateModel.CurrentUser != null)
-                EMailValue = StateModel.CurrentUser.EMail;
+            try
+            {
+                _eventAggregator = eventAggregator;
+                _navigationService = navigationService;
+                Repository.DatabasePath = sqLiteImpl.GetPathToDatabase("bankApp.db");
+                Repository.Init();
+                StateModel.ReadLastLogin();
+                if (StateModel.CurrentUser != null)
+                    EMailValue = StateModel.CurrentUser.EMail;
 
-            LoginOrRegisterCommand = new DelegateCommand(LoginOrRegister);
-            OpenRegisterSectionCommand = new DelegateCommand(OpenRegister);
-            OpenBankBranchesCommand = new DelegateCommand(OpenBranches);
+                LoginOrRegisterCommand = new DelegateCommand(LoginOrRegister);
+                OpenRegisterSectionCommand = new DelegateCommand(OpenRegister);
+                OpenBankBranchesCommand = new DelegateCommand(OpenBranches);
+            }
+            catch (Exception ex)
+            {
+                Other.ExceptionProcessor.ProcessException(ex);
+            }
+           
         }
 
 	    async void LoginOrRegister()
 	    {
-	        bool result = RegistrationMode ? 
-                AuthClass.Register(EMailValue, PasswordValue, PasswordConfirmValue) 
-                : AuthClass.Auth(EMailValue, PasswordValue);
-
-	        if (!result)
-	            _eventAggregator.GetEvent<ShowAlertEvent>().Publish("Произошла ошибка");
-	        else
+	        try
 	        {
-                await StateModel.UpdateCurrentUserFromServer(EMailValue);
+	            bool result = RegistrationMode
+	                ? AuthClass.Register(EMailValue, PasswordValue, PasswordConfirmValue)
+	                : AuthClass.Auth(EMailValue, PasswordValue);
 
-	            if (StateModel.CurrentUser == null)
-	            {
-	                await _navigationService.NavigateAsync(nameof(UserDataPage));
-	            }
+	            if (!result)
+	                _eventAggregator.GetEvent<ShowAlertEvent>().Publish("Произошла ошибка");
 	            else
 	            {
-                    await _navigationService.NavigateAsync(nameof(CardsInfoPage));
+	                await StateModel.UpdateCurrentUserFromServer(EMailValue);
+
+	                if (StateModel.CurrentUser == null)
+	                {
+	                    await _navigationService.NavigateAsync(nameof(UserDataPage));
+	                }
+	                else
+	                {
+	                    await _navigationService.NavigateAsync(nameof(CardsInfoPage));
+	                }
 	            }
 	        }
-
-        }
+	        catch (Exception ex)
+	        {
+	            Other.ExceptionProcessor.ProcessException(ex);
+            }
+	    }
 
 	    void OpenRegister()
 	    {

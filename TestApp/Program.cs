@@ -11,7 +11,7 @@ namespace TestApp
 {
     class Program
     {
-        private static string EMailValue = "user2@gmail.com";
+        private static string EMailValue = "user3@gmail.com";
         private static string PasswordValue = "qwerty";
         static void Main(string[] args)
         {
@@ -49,7 +49,7 @@ namespace TestApp
             if (result)
             {
                 var userInfo = await BankApi.GetCurrentUser();
-                if (userInfo == null)
+                // if (userInfo == null)
                 {
                     userInfo = new BankUser
                     {
@@ -76,15 +76,17 @@ namespace TestApp
                 {
                     CardName = "test card 1",
                     Balance = 5,
-                    CardNumber = "5168742711605224",
+                    CardNumber = "4149625813029566",
                     CVV = "123",
                     IsCredit = true,
                     Month = 11,
                     Year = 2019
                 };
+                
+                int cNum = 5;
                 await BankApi.ApiClient.AddCard(SelectedCard, AuthClass.Token);
-                //await BankApi.ApiClient.ModifyCard(1, SelectedCard, AuthClass.Token);
-                //await BankApi.ApiClient.DeleteCard(1, AuthClass.Token);
+                await BankApi.ApiClient.ModifyCard(cNum, SelectedCard, AuthClass.Token);
+                await BankApi.ApiClient.DeleteCard(cNum, AuthClass.Token);
 
                 //var br = await BankApi.ApiClient.GetBranches();
                 //var userInfo = await BankApi.GetCurrentUser();

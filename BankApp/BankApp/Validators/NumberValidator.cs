@@ -10,35 +10,15 @@ namespace BankApp.Validators
         static readonly BindablePropertyKey IsValidPropertyKey = BindableProperty.CreateReadOnly("IsValid", typeof(bool), typeof(NumberValidator), false);
         public static readonly BindableProperty IsValidProperty = IsValidPropertyKey.BindableProperty;
 
-        public static readonly BindableProperty MaxValProperty = BindableProperty.Create("MaxVal", typeof(int), typeof(NumberValidator), null);
-        public static readonly BindableProperty MinValProperty = BindableProperty.Create("MinVal", typeof(int), typeof(NumberValidator), null);
-        public static readonly BindableProperty MinLenProperty = BindableProperty.Create("MinLen", typeof(int), typeof(NumberValidator), null);
-        public static readonly BindableProperty MaxLenProperty = BindableProperty.Create("MaxLen", typeof(int), typeof(NumberValidator), null);
+        public int MaxVal { get; set; }
+ 
 
-        public int MaxValue
-        {
-            get => (int)GetValue(MaxValProperty);
-            set => SetValue(MaxValProperty, value);
-        }
+        public int MinVal { get; set; }
+ 
+        public int MaxLen { get; set; }
 
-        public int MinValue
-        {
-            get => (int)GetValue(MinValProperty);
-            set => SetValue(MinValProperty, value);
-        }
-
-        public int MaxLength
-        {
-            get => (int)GetValue(MaxLenProperty);
-            set => SetValue(MaxLenProperty, value);
-        }
-
-        public int MinLength
-        {
-            get => (int)GetValue(MinLenProperty);
-            set => SetValue(MinLenProperty, value);
-        }
-
+        public int MinLen { get; set; }
+    
         public bool IsValid
         {
             get => (bool)GetValue(IsValidProperty);
@@ -56,29 +36,41 @@ namespace BankApp.Validators
         }
         void HandleTextChanged(object sender, TextChangedEventArgs e)
         {
-            var curVal = e.NewTextValue;
-            bool allDigits = true;
-            bool maxLenOk = true;
-            bool minLenOk = true;
-            bool maxValOk = true;
-            bool minValOk = true;
+            try
+            {
 
-            for (int i = 0; i < curVal.Length; i++)
-                allDigits = allDigits && Char.IsDigit(curVal, i);
+                var curVal = e.NewTextValue;
+                bool allDigits = true;
+                bool maxLenOk = true;
+                bool minLenOk = true;
+                bool maxValOk = true;
+                bool minValOk = true;
 
-            if (MaxLength > 0)
-                maxLenOk = curVal.Length <= MaxLength;
+                for (int i = 0; i < curVal.Length; i++)
+                    allDigits = allDigits && Char.IsDigit(curVal, i);
 
-            if (MinLength > 0)
-                minLenOk = curVal.Length >= MaxLength;
+                if (MaxLen > 0)
+                    maxLenOk = curVal.Length <= MaxLen;
 
-            if (MaxValue > 0)
-                maxValOk = Int32.Parse(curVal) <= MaxValue;
+                if (MinLen > 0)
+                    minLenOk = curVal.Length >= MinLen;
 
-            if (MinValue > 0)
-                minValOk = Int32.Parse(curVal) >= MinValue;
+                if (MaxVal > 0)
+                {
+                    maxValOk = Int32.TryParse(curVal, out int val) && val <= MaxVal;
+                }
 
-            IsValid = allDigits && maxLenOk && minLenOk && maxValOk && minValOk;
+                if (MinVal > 0)
+                    minValOk = Int32.TryParse(curVal, out int val) && val >= MinVal;
+
+                IsValid = allDigits && maxLenOk && minLenOk && maxValOk && minValOk;
+            }
+            catch (Exception ex)
+            {
+                Other.ExceptionProcessor.ProcessException(ex);
+                IsValid = false;
+            }
+
             ((Entry)sender).TextColor = IsValid ? Color.Green : Color.Red;
 
         }

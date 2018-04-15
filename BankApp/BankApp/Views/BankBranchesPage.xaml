@@ -16,8 +16,8 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Text="{Binding Number}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
-                            <Label Grid.Column="1" Text="{Binding Name}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+                            <Label Grid.Column="0" Text="{Binding Number}" FontSize="18" TextColor="Black" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
+                            <Label Grid.Column="1" Text="{Binding Name}" FontSize="18" TextColor="Black" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"></Label>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>

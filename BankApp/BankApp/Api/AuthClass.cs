@@ -61,9 +61,9 @@ namespace BankApp.Api
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //processing error
+                Other.ExceptionProcessor.ProcessException(ex);
             }
 
             return !String.IsNullOrEmpty(_token);
@@ -71,35 +71,39 @@ namespace BankApp.Api
 
         internal static bool Register(string email, string password, string confirmPassword)
         {
+
             bool registrationResult = false;
-            var registerModel = new
-            {
-                Email = email,
-                Password = password,
-                ConfirmPassword = confirmPassword
-            };
-            
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ServerUrl + "/api/Account/Register");
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Accept = "application/json";
-            string json = JsonConvert.SerializeObject(registerModel);
-            byte[] bytes = Encoding.UTF8.GetBytes(json);
-            using (Stream stream = request.GetRequestStream())
-            {
-                stream.Write(bytes, 0, bytes.Length);
-            }
 
             try
-            {
+            { 
+
+                var registerModel = new
+                {
+                    Email = email,
+                    Password = password,
+                    ConfirmPassword = confirmPassword
+                };
+            
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ServerUrl + "/api/Account/Register");
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+                string json = JsonConvert.SerializeObject(registerModel);
+                byte[] bytes = Encoding.UTF8.GetBytes(json);
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(bytes, 0, bytes.Length);
+                }
+
+            
                 var response = request.GetResponse();
                 //processing response
                 registrationResult = true;
             }
             catch (Exception ex)
             {
-                //processing error
-                registrationResult = false;
+                Other.ExceptionProcessor.ProcessException(ex);
+                    registrationResult = false;
             }
 
             if (registrationResult)
@@ -109,29 +113,6 @@ namespace BankApp.Api
             
         }
 
-         static Dictionary<string, string> GetTokenDictionary(string userName, string password)
-        {
-            
-
-
-            var pairs = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>( "grant_type", "password" ),
-                new KeyValuePair<string, string>( "username", userName ),
-                new KeyValuePair<string, string> ( "password", password )
-            };
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, ServerUrl + "/Token") {Content = new FormUrlEncodedContent(pairs)};
-            using (var client = new HttpClient())
-            {
-                var response =
-                    client.SendAsync(requestMessage).Result;
-                var result = response.Content.ReadAsStringAsync().Result;
-                Dictionary<string, string> responseDictionary =
-                    JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-                return responseDictionary;
-            }
-            
-        }
 
     }
 }

@@ -29,7 +29,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
 
             return null;
@@ -59,7 +59,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             
 
@@ -93,9 +93,9 @@ namespace BankApi.Controllers
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             return BadRequest();
         }
@@ -113,9 +113,9 @@ namespace BankApi.Controllers
                 }
                 return Ok();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             return InternalServerError();
         }

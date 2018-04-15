@@ -31,9 +31,9 @@ namespace BankApi.Controllers
                         results.Add("This card is not yours");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             return results;
         }
@@ -52,9 +52,9 @@ namespace BankApi.Controllers
                         .ToList();
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
 
             return userCards;
@@ -73,9 +73,9 @@ namespace BankApi.Controllers
                         .FirstOrDefault(c => c.Id == id && c.IsActive);
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             return retCard;
         }
@@ -112,7 +112,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             
 
@@ -161,9 +161,9 @@ namespace BankApi.Controllers
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             if (retCard != null)
                 return Ok(retCard);
@@ -190,7 +190,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
         }
     }

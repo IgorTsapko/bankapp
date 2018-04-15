@@ -56,7 +56,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             return userPays;
         }
@@ -83,7 +83,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
 
             return userPays;
@@ -103,7 +103,7 @@ namespace BankApi.Controllers
             }
             catch (Exception e)
             {
-                //
+                ExceptionProcessor.ProcessException(e);
             }
             
 

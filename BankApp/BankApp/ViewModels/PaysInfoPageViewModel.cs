@@ -21,8 +21,15 @@ namespace BankApp.ViewModels
 
         public PaysInfoPageViewModel()
         {
-            PageTitle = StateModel.SelectedCard.CardName;
-            Pays = Repository.GetItems<PayInfoDb>().Where(p => p.CardId == StateModel.SelectedCard.Id).ToList();
+            try
+            {
+                PageTitle = StateModel.SelectedCard.CardName;
+                Pays = Repository.GetItems<PayInfoDb>().Where(p => p.CardId == StateModel.SelectedCard.Id).ToList();
+            }
+            catch (Exception ex)
+            {
+                Other.ExceptionProcessor.ProcessException(ex);
+            }
         }
 	}
 }

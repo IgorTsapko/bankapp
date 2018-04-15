@@ -8,7 +8,7 @@ namespace BankApp.Validators
 {
     public class EMailValidator : Behavior<Entry>
     {
-        private RegexUtilities _regexUtils = new RegexUtilities();
+        private readonly RegexUtilities _regexUtils = new RegexUtilities();
 
         static readonly BindablePropertyKey IsValidPropertyKey = BindableProperty.CreateReadOnly("IsValid", typeof(bool), typeof(EMailValidator), false);
         public static readonly BindableProperty IsValidProperty = IsValidPropertyKey.BindableProperty;

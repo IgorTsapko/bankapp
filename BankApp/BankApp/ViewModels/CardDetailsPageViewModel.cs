@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using BankApp.Api;
 using BankApp.Database;
+using BankApp.EventTypes;
 using BankApp.Models;
 using BankApp.Other;
 using BankApp.Views;
+using Prism.Events;
 using Prism.Navigation;
 
 namespace BankApp.ViewModels
@@ -15,6 +17,7 @@ namespace BankApp.ViewModels
 	public class CardDetailsPageViewModel : BindableBase
 	{
 	    private readonly INavigationService _navigationService;
+	    private readonly IEventAggregator _eventAggregator;
 
         private CardInfoDb _selectedCard;
         public CardInfoDb SelectedCard
@@ -40,39 +43,56 @@ namespace BankApp.ViewModels
 
         public DelegateCommand SaveCommand { get; set; }
 
-        public CardDetailsPageViewModel(INavigationService navigationService)
+        public CardDetailsPageViewModel(INavigationService navigationService, IEventAggregator eventAggregator)
         {
-            _navigationService = navigationService;
-            AddNewCardMode = StateModel.SelectedCard == null;
-            if (AddNewCardMode)
+            try
             {
-                SelectedCard = new CardInfoDb
+                _navigationService = navigationService;
+                _eventAggregator = eventAggregator;
+                AddNewCardMode = StateModel.SelectedCard == null;
+                if (AddNewCardMode)
                 {
-                    CardName = "test card 1",
-                    Balance = 5,
-                    CardNumber = "5168742711605224",
-                    CVV = "123",
-                    IsCredit = true,
-                    Month = 11,
-                    Year = 2019
-                };
+                    SelectedCard = new CardInfoDb
+                    {
+                        CardName = "test card 1",
+                        Balance = 5,
+                        CardNumber = "5168742711605224",
+                        CVV = "123",
+                        IsCredit = true,
+                        Month = 11,
+                        Year = 2019
+                    };
 
+                }
+                else
+                    SelectedCard = StateModel.SelectedCard;
+
+                SaveCommand = new DelegateCommand(SaveCard);
             }
-            else
-                SelectedCard = StateModel.SelectedCard;
-
-            SaveCommand = new DelegateCommand(SaveCard);
+            catch (Exception ex)
+            {
+                ExceptionProcessor.ProcessException(ex);
+            }
         }
 
 	    async void SaveCard()
 	    {
-	        if (AddNewCardMode)
-	            await BankApi.AddCard(new CardInfo(SelectedCard));
-	        else
-	            await BankApi.ModifyCard(new CardInfo(SelectedCard));
+	        try
+	        {
+	            if (AddNewCardMode)
+	                await BankApi.AddCard(new CardInfo(SelectedCard));
+	            else
+	                await BankApi.ModifyCard(new CardInfo(SelectedCard));
 
-	        await StateModel.UpdateCurrentUserFromServer();
-	        await _navigationService.GoBackAsync();
-        }
+	            await StateModel.UpdateCurrentUserFromServer();
+	            _eventAggregator.GetEvent<UpdateCardsEvent>().Publish();
+
+	            await _navigationService.GoBackAsync();
+	        }
+	        catch (Exception ex)
+	        {
+	            ExceptionProcessor.ProcessException(ex);
+            }
+	    }
 	}
 }

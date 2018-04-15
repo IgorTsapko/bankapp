@@ -24,6 +24,7 @@ namespace BankApp.ViewModels
             set => SetProperty(ref _selectedUser, value);
         }
 
+	    private readonly bool _createMode;
 	    public string SaveCaption => "Сохранить";
         public string NameCaption => "Имя";
 	    public string SurnameCaption => "Фамилия";
@@ -31,36 +32,38 @@ namespace BankApp.ViewModels
 
         public UserDataPageViewModel(INavigationService navigationService)
         {
-            SelectedUser = StateModel.CurrentUser;
-            SaveCommand = new DelegateCommand(Save);
-            _navigationService = navigationService;
+            try
+            {
+                _createMode = SelectedUser == null;
+                SelectedUser = _createMode ? new BankUserDb() : StateModel.CurrentUser;
+
+                SaveCommand = new DelegateCommand(Save);
+                _navigationService = navigationService;
+            }
+            catch (Exception ex)
+            {
+                Other.ExceptionProcessor.ProcessException(ex);
+            }
         }
 
 	    async void Save()
 	    {
-	        await BankApi.ModifyUser(new BankUser(SelectedUser));
-            await StateModel.UpdateCurrentUserFromServer();
-            await _navigationService.NavigateAsync(nameof(CardsInfoPage));
+	        try
+	        {
+	            if (_createMode)
+	                await BankApi.CreateUser(new BankUser(SelectedUser));
+	            else
+	                await BankApi.ModifyUser(new BankUser(SelectedUser));
+	            await StateModel.UpdateCurrentUserFromServer();
+	            if (StateModel.CurrentUser != null)
+	                await _navigationService.NavigateAsync(nameof(CardsInfoPage));
+	        }
+	        catch (Exception ex)
+	        {
+	            Other.ExceptionProcessor.ProcessException(ex);
+	        }
         }
 
 
-        //{
-        //    userInfo = new BankUser
-        //    {
-        //        Name = "Igor",
-        //           Cards = new List<CardInfo>(),
-        //           Pays = new List<PayInfo>(),
-        //           Id = 0,
-        //           PhoneNum = "0669591747",
-        //           Surname = "Tsapko"
-        //    };
-        //    try
-        //    {
-        //        ///var u = await BankApi.ApiClient.CreateUser(userInfo, AuthClass.Token);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //    }
-        //}
     }
 }

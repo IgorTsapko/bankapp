@@ -9,7 +9,8 @@
              x:Class="BankApp.Views.LoginOrRegisterPage">
   <ContentPage.Content>
       <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
-        <Label Text="{Binding EMailCaption}" HorizontalTextAlignment="Start"></Label>
+
+          <Label Text="{Binding EMailCaption}" HorizontalTextAlignment="Start"></Label>
             <Entry Keyboard="{Binding EMailKeyboard}" Text="{Binding EMailValue, Mode=TwoWay}">
                 <Entry.Behaviors>
                     <validators:EMailValidator/>

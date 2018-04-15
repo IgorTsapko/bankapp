@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BankApp.Api;
 using BankApp.Database;
+using BankApp.Other;
 
 namespace BankApp.ViewModels
 {
@@ -24,7 +25,8 @@ namespace BankApp.ViewModels
 	    {
 	        var branches = await BankApi.GetBranches();
 	        Branches = new List<BankBranchDb>();
-            if (branches.Count > 0)
+
+            if (branches != null && branches.Count > 0)
             {
                 Branches = branches.Select(branche => new BankBranchDb(branche)).ToList();
                 foreach (var branche in Branches)
@@ -38,7 +40,15 @@ namespace BankApp.ViewModels
 
 	    public BankBranchesPageViewModel()
 	    {
-	        ReadList();
+	        try
+	        {
+	            ReadList();
+            }
+	        catch (Exception ex)
+	        {
+	            Other.ExceptionProcessor.ProcessException(ex);
+            }
+	        
 	    }
 	}
 }

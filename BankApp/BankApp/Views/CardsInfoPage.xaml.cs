@@ -34,7 +34,7 @@ namespace BankApp.Views
 
         void Logoff()
         {
-            AuthClass.Logoff();
+            
             ((CardsInfoPageViewModel)BindingContext).Logoff();
            
         }

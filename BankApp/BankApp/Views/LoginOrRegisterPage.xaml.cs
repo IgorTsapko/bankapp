@@ -1,4 +1,5 @@
-﻿using BankApp.EventTypes;
+﻿using BankApp.Api;
+using BankApp.EventTypes;
 using Prism.Events;
 using Xamarin.Forms;
 
@@ -16,6 +17,7 @@ namespace BankApp.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            AuthClass.Logoff();
             _eventAggregator.GetEvent<ShowAlertEvent>().Subscribe(ShowAlert);
         }
 

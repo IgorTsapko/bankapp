@@ -32,11 +32,20 @@ namespace BankApp.Validators
         }
         void HandleTextChanged(object sender, TextChangedEventArgs e)
         {
-            var password = e.NewTextValue;
-            if (CompareToEntry != null)
-                password = CompareToEntry.Text;
+            try
+            {
+                var password = e.NewTextValue;
+                if (CompareToEntry != null)
+                    password = CompareToEntry.Text;
 
-            IsValid = (e.NewTextValue == password) && (!String.IsNullOrWhiteSpace(e.NewTextValue));
+                IsValid = (e.NewTextValue == password) && (!String.IsNullOrWhiteSpace(e.NewTextValue));
+            }
+            catch (Exception ex)
+            {
+                //
+                IsValid = false;
+            }
+            
             ((Entry)sender).TextColor = IsValid ? Color.Green : Color.Red;
 
         }
