@@ -23,6 +23,14 @@ namespace BankApp.ViewModels
 
 	    async void ReadList()
 	    {
+	        try
+	        {
+	            Branches = Repository.GetItems<BankBranchDb>().ToList();
+            }
+	        catch (Exception e)
+	        {
+	            ExceptionProcessor.ProcessException(e);
+	        }
 	        var branches = await BankApi.GetBranches();
 	        Branches = new List<BankBranchDb>();
 

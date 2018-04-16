@@ -34,7 +34,7 @@ namespace BankApp.ViewModels
         {
             try
             {
-                _createMode = SelectedUser == null;
+                _createMode = StateModel.CurrentUser == null;
                 SelectedUser = _createMode ? new BankUserDb() : StateModel.CurrentUser;
 
                 SaveCommand = new DelegateCommand(Save);
